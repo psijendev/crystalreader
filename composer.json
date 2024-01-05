@@ -9,14 +9,23 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "doctrine/dbal": "^3.7",
         "filament/filament": "3.1",
+        "filament/spatie-laravel-media-library-plugin": "3.1",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
-        "livewire/livewire": "^3.3"
+        "livewire/livewire": "^3.3",
+        "novadaemon/filament-pretty-json": "^2.0",
+        "pxlrbt/filament-spotlight": "^1.2",
+        "shuvroroy/filament-spatie-laravel-health": "^2.0",
+        "spatie/cpu-load-health-check": "^1.0",
+        "spatie/security-advisories-health-check": "^1.1",
+        "wiebenieuwenhuis/filament-code-editor": "^1.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.9",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",

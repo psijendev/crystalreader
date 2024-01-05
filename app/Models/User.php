@@ -9,6 +9,14 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Panel;
 use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+use App\Models\Bookmark;
+use App\Models\Catalog;
+use App\Models\Document;
+
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -22,6 +30,9 @@ class User extends Authenticatable implements FilamentUser
     protected $fillable = [
         'name',
         'role',
+        'status',
+        'countrycode',
+        'phoneno',
         'email',
         'password',
     ];
@@ -50,5 +61,17 @@ class User extends Authenticatable implements FilamentUser
     {
         return str_ends_with($this->email, '@gmail.com');
     }
-}
 
+    public function catalogs(): hasMany {
+        return $this->hasMany(Catalog::class);
+    }
+
+    public function documents(): hasMany {
+        return $this->hasMany(Document::class);
+    }
+
+    public function bookmarks(): hasMany {
+        return $this->hasMany(Bookmark::class);
+    }
+
+}

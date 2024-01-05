@@ -25,12 +25,26 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'role' => "Admin",
+            'status' => "Active",
+            'countrycode' => 960,
+            'phoneno' => 9375412,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
     }
+
+
+
+    public function user(): static
+    {
+        return [
+            'role' => "USER",
+        ];
+    }
+
 
     /**
      * Indicate that the model's email address should be unverified.
