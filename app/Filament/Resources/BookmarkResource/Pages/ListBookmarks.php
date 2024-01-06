@@ -5,6 +5,7 @@ namespace App\Filament\Resources\BookmarkResource\Pages;
 use App\Filament\Resources\BookmarkResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use App\Imports\BookmarkImport;
 
 class ListBookmarks extends ListRecords
 {
@@ -14,6 +15,10 @@ class ListBookmarks extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+            \EightyNine\ExcelImport\ExcelImportAction::make()
+            ->slideOver()
+            ->color("primary")
+            ->use(BookmarkImport::class),
         ];
     }
 }

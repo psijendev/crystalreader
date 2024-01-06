@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->longText('description');
             $table->string('status');
-            $table->boolean('isCatalog');
+            $table->string('isCatalog')->nullable();
             $table->foreignId('catalog_id')->nullable()->constrained(
                 table: 'catalogs', indexName: 'document_catalog_id'
             );
             $table->foreignId('user_id')->nullable()->constrained(
                 table: 'users', indexName: 'document_user_id'
             );
-            $table->json('metadata');
+            $table->json('metadata')->nullable();
             $table->timestamps();
         });
     }

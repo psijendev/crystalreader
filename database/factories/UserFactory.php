@@ -38,12 +38,6 @@ class UserFactory extends Factory
 
 
 
-    public function user(): static
-    {
-        return [
-            'role' => "USER",
-        ];
-    }
 
 
     /**

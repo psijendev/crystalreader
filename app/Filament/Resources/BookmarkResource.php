@@ -16,6 +16,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use pxlrbt\FilamentExcel\Columns\Column;
+
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
@@ -59,8 +64,8 @@ class BookmarkResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('user.name')->wrap(),
-                TextColumn::make('document.title')->wrap(),
+                TextColumn::make('user_id')->wrap(),
+                TextColumn::make('document_id')->wrap(),
                 TextColumn::make('status')->wrap(),
             ])
             ->filters([
@@ -72,6 +77,7 @@ class BookmarkResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    ExportBulkAction::make()
                 ]),
             ]);
     }
@@ -89,6 +95,22 @@ class BookmarkResource extends Resource
             'index' => Pages\ListBookmarks::route('/'),
             'create' => Pages\CreateBookmark::route('/create'),
             'edit' => Pages\EditBookmark::route('/{record}/edit'),
+        ];
+    }
+
+
+    public function getTableBulkActions()
+    {
+        return  [
+            ExportAction::make()->exports([
+                ExcelExport::make()->withColumns([
+                    Column::make('user_id'),
+                    Column::make('document_id'),
+                    Column::make('status'),
+                    Column::make('created_at'),
+                    Column::make('deleted_at'),
+                ]),
+            ]),
         ];
     }
 }

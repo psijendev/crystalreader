@@ -14,6 +14,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
 
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use pxlrbt\FilamentExcel\Columns\Column;
+
 use Filament\Tables\Columns\TextColumn;
 
 use Filament\Forms\Components\Select;
@@ -55,13 +60,24 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id'),
                 TextColumn::make('name')->copyable()->copyMessage('Name copied!')->searchable(),
                 TextColumn::make('email')->copyable()->copyMessage('Email address copied')->searchable(),
+                TextColumn::make('countrycode'),
+                TextColumn::make('phoneno'),
                 TextColumn::make('role')->badge()
                 ->color(fn (string $state): string => match ($state) {
                     'Admin' => 'success',
                     'User' => 'warning',
                 }),
+                TextColumn::make('status')->badge()
+                ->color(fn (string $state): string => match ($state) {
+                    'Active' => 'success',
+                    'Pending' => 'warning',
+                    'Blocked' => 'danger'
+                }),
+                TextColumn::make('email_verified_at'),
+                TextColumn::make('password')->wrap(),
                 TextColumn::make('created_at')->since(),
                 TextColumn::make('updated_at')->since(),
             ])
@@ -75,6 +91,7 @@ class UserResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    ExportBulkAction::make()
                 ]),
             ]);
     }
@@ -92,6 +109,26 @@ class UserResource extends Resource
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
+        ];
+    }
+
+    public function getTableBulkActions()
+    {
+        return  [
+            ExportAction::make()->exports([
+                ExcelExport::make()->withColumns([
+                    Column::make('name'),
+                    Column::make('role'),
+                    Column::make('status'),
+                    Column::make('countrycode'),
+                    Column::make('phoneno'),
+                    Column::make('email'),
+                    Column::make('email_verified_at'),
+                    Column::make('password'),
+                    Column::make('created_at'),
+                    Column::make('deleted_at'),
+                ]),
+            ]),
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\CatalogResource\Pages;
 use App\Filament\Resources\CatalogResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use App\Imports\CatalogImport;
 
 class ListCatalogs extends ListRecords
 {
@@ -14,6 +15,10 @@ class ListCatalogs extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+            \EightyNine\ExcelImport\ExcelImportAction::make()
+            ->slideOver()
+            ->color("primary")
+            ->use(CatalogImport::class),
         ];
     }
 }

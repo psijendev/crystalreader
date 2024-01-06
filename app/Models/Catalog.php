@@ -25,7 +25,7 @@ class Catalog extends Model implements HasMedia
     ];
     protected $hidden = [];
     protected $casts = [
-        'metadata' => 'json',
+        'metadata' => 'array',
         'cover' => 'array'
     ];
 

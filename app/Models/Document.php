@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use App\Models\User;
-use App\Models\Document;
 use App\Models\Bookmark;
 
 class Document extends Model implements HasMedia
@@ -31,17 +30,13 @@ class Document extends Model implements HasMedia
     ];
     protected $hidden = [];
     protected $casts = [
-        'metadata' => 'json',
-        'isCatalog' => 'boolean',
+        'metadata' => 'array',
+        'isCatalog' => 'string',
         'attachment' => 'array',
     ];
 
     public function catalog(): BelongsTo {
         return $this->belongsTo(Catalog::class);
-    }
-
-    public function documents(): hasMany {
-        return $this->hasMany(Document::class);
     }
 
     public function bookmarks(): hasMany {

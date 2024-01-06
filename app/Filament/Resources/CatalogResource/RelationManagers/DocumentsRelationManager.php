@@ -10,8 +10,6 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-use App\Models\Catalog;
-
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
@@ -21,6 +19,8 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+
+use App\Models\Catalog;
 
 class DocumentsRelationManager extends RelationManager
 {
@@ -88,23 +88,23 @@ class DocumentsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('title')
-            ->columns([
-                TextColumn::make('title')->wrap(),
-                TextColumn::make('description')->wrap(),
-                TextColumn::make('status')->badge()
-                ->color(fn (string $state): string => match ($state) {
-                    'Active' => 'success',
-                    'Pending' => 'warning',
-                    'Blocked' => 'danger',
-                }),
-                TextColumn::make('isCatalog')->label("Belongs To Catalog?"),
-                TextColumn::make('catalog.title')->label("Catalog"),
-                TextColumn::make('metadata')->wrap(),
-                TextColumn::make('user.name')->label("Added By User")->wrap(),
-                TextColumn::make('created_at')->since(),
-                TextColumn::make('updated_at')->since(),
-            ])
+        ->recordTitleAttribute('title')
+        ->columns([
+            TextColumn::make('title')->wrap(),
+            TextColumn::make('description')->wrap(),
+            TextColumn::make('status')->badge()
+            ->color(fn (string $state): string => match ($state) {
+                'Active' => 'success',
+                'Pending' => 'warning',
+                'Blocked' => 'danger',
+            }),
+            TextColumn::make('isCatalog')->label("Belongs To Catalog?"),
+            TextColumn::make('catalog.title')->label("Catalog"),
+            TextColumn::make('metadata')->wrap(),
+            TextColumn::make('user.name')->label("Added By User")->wrap(),
+            TextColumn::make('created_at')->since(),
+            TextColumn::make('updated_at')->since(),
+        ])
             ->filters([
                 //
             ])

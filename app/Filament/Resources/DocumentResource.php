@@ -6,6 +6,7 @@ use App\Filament\Resources\DocumentResource\Pages;
 use App\Filament\Resources\DocumentResource\RelationManagers;
 use App\Models\Document;
 use App\Models\Catalog;
+use App\Models\User;
 
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,8 +16,16 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+
+
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use pxlrbt\FilamentExcel\Columns\Column;
+
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -24,6 +33,8 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+
+
 
 
 
@@ -105,10 +116,10 @@ class DocumentResource extends Resource
                     'Pending' => 'warning',
                     'Blocked' => 'danger',
                 }),
-                TextColumn::make('isCatalog')->label("Belongs To Catalog?"),
-                TextColumn::make('catalog.title')->label("Catalog"),
-                TextColumn::make('metadata')->wrap(),
-                TextColumn::make('user.name')->label("Added By User")->wrap(),
+                TextColumn::make('isCatalog'),
+                TextColumn::make('catalog_id'),
+                TextColumn::make('metadata')->getStateUsing(fn ($record) => json_encode($record->metadata))->wrap(),
+                TextColumn::make('user_id')->label("User ID"),
                 TextColumn::make('created_at')->since(),
                 TextColumn::make('updated_at')->since(),
 
@@ -122,9 +133,47 @@ class DocumentResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+
                     Tables\Actions\DeleteBulkAction::make(),
+                    ExportBulkAction::make()
+                    /*
+                    ExportAction::make()->exports([
+                        ExcelExport::make()->withColumns([
+                            Column::make('title'),
+                            Column::make('description'),
+                            Column::make('status'),
+                            Column::make('isCatalog'),
+                            Column::make('catalog_id')->formatStateUsing(fn ($state) => str_replace('/', '', $state)),
+                            Column::make('user_id'),
+                            Column::make('catalog_id'),
+                            Column::make('created_at'),
+                            Column::make('deleted_at'),
+                        ]),
+                    ]),
+                    */
+
+
                 ]),
             ]);
+    }
+
+    public function getTableBulkActions()
+    {
+        return  [
+            ExportAction::make()->exports([
+                ExcelExport::make()->withColumns([
+                    Column::make('title'),
+                    Column::make('description'),
+                    Column::make('status'),
+                    Column::make('isCatalog'),
+                    Column::make('catalog_id'),
+                    Column::make('user_id'),
+                    Column::make('metadata'),
+                    Column::make('created_at'),
+                    Column::make('deleted_at'),
+                ]),
+            ]),
+        ];
     }
 
     public static function getRelations(): array

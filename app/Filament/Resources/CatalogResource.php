@@ -14,8 +14,15 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+
+
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use pxlrbt\FilamentExcel\Columns\Column;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -45,7 +52,7 @@ class CatalogResource extends Resource
                     ->downloadable(),
                 Section::make('Metadata')
                 ->schema([
-                    KeyValue::make('Catalog Meta-data')
+                    KeyValue::make('metadata')
                         ->keyLabel('Field name')
                         ->valueLabel('Field value')
                         ->reorderable(),
@@ -60,8 +67,10 @@ class CatalogResource extends Resource
             ->columns([
                 TextColumn::make('title')->wrap(),
                 TextColumn::make('description')->wrap(),
-                TextColumn::make('user.name')->label("Added By User")->wrap(),
-                TextColumn::make('metadata')->wrap(),
+                TextColumn::make('user_id')->wrap(),
+                TextColumn::make('metadata')->getStateUsing(fn ($record) => json_encode($record->metadata))->wrap(),
+                TextColumn::make('created_at')->since(),
+                TextColumn::make('updated_at')->since(),
             ])
             ->filters([
                 //
@@ -72,6 +81,7 @@ class CatalogResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    ExportBulkAction::make()
                 ]),
             ]);
     }
@@ -89,6 +99,22 @@ class CatalogResource extends Resource
             'index' => Pages\ListCatalogs::route('/'),
             'create' => Pages\CreateCatalog::route('/create'),
             'edit' => Pages\EditCatalog::route('/{record}/edit'),
+        ];
+    }
+
+    public function getTableBulkActions()
+    {
+        return  [
+            ExportAction::make()->exports([
+                ExcelExport::make()->withColumns([
+                    Column::make('title'),
+                    Column::make('description'),
+                    Column::make('user_id'),
+                    Column::make('metadata'),
+                    Column::make('created_at'),
+                    Column::make('deleted_at'),
+                ]),
+            ]),
         ];
     }
 }

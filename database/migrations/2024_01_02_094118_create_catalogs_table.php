@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained(
                 table: 'users', indexName: 'catalog_user_id'
             );
-            $table->json('metadata');
+            $table->json('metadata')->nullable();
             $table->timestamps();
         });
     }
