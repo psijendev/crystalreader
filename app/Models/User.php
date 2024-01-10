@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Bookmark;
 use App\Models\Catalog;
 use App\Models\Document;
-
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -58,7 +58,11 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return str_ends_with($this->email, '@gmail.com');
+        if(Auth::user()->role == "Admin"){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public function catalogs(): hasMany {

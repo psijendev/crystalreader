@@ -109,7 +109,7 @@ class DocumentResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('title')->wrap(),
-                TextColumn::make('description')->wrap(),
+                TextColumn::make('description')->wrap()->limit(20),
                 TextColumn::make('status')->badge()
                 ->color(fn (string $state): string => match ($state) {
                     'Active' => 'success',
