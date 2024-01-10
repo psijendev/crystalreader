@@ -16,7 +16,9 @@ class Bookmark extends Model
         'user_id',
         'status',
     ];
-    protected $hidden = [];
+    protected $hidden = [
+        'user_id',
+    ];
     protected $casts = [];
 
     public function document(): BelongsTo {

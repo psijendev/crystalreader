@@ -12,7 +12,19 @@ Catalog hasMany Documents
 Document hasMany Bookmarks
 
 
+API Documentation
 
+UserLogin
+UserRegistration
+UserSignOut
+
+GetDocuments
+GetDocumentWhere
+
+CreateBookmark
+GetBookmarks
+GetBookmarkWhere
+DeleteBookmark
 
 
 

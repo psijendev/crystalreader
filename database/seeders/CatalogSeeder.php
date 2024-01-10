@@ -13,6 +13,6 @@ class CatalogSeeder extends Seeder
      */
     public function run(): void
     {
-        Catalog::factory()->count(3)->create();
+        Catalog::factory()->count(14)->create();
     }
 }
